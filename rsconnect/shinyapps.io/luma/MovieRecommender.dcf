@@ -1,0 +1,13 @@
+name: MovieRecommender
+title: MovieRecommender
+username:
+account: luma
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5268634
+bundleId: 5336349
+url: https://luma.shinyapps.io/MovieRecommender/
+when: 1638827817.99904
+lastSyncTime: 1638827817.99904
+asMultiple: FALSE
+asStatic: FALSE
