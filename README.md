@@ -10,3 +10,5 @@ App2 is a copy cat of this [app](https://philippsp.shinyapps.io/BookRecommendati
 
 Thank you [pspachtholz](https://github.com/pspachtholz) for sharing your code
 
+This [Book Recommender]((https://philippsp.shinyapps.io/BookRecommendation/), See read me in this [repo](https://github.com/pspachtholz/BookRecommender), was adapted to [MovieLense data](https://liangfgithub.github.io/Rcode_W13_Movie_EDA.nb.html) 
+
