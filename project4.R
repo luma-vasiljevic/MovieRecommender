@@ -41,6 +41,7 @@ genres=melt(movies_reshaped[,c("MovieID","Genres1","Genre2","Genre3","Genre4","G
 genres=genres[,c(1,3)]
 colnames(genres)=c("MovieID","Genre")
 
+
 movies_reshaped2=movies_reshaped[,1:3]
 
 user_results = (1:10)/10
@@ -93,6 +94,10 @@ system1 = function (genre, algo,n){
   recommendation$reviews=recommendation$sum_Rating/recommendation$avg_Rating
   recommendation[,c("MovieID","Title","avg_Rating","reviews")]
 }
+
+genres1=merge(genres,movies)
+genres1=genres1[order(genres1$Genre),]
+genres1$display = paste(genres1$Genre , ": " , genres1$Title)
 
 Genres = unique(genres$Genre)
 

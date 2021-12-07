@@ -4,6 +4,27 @@
 source('functions/cf_algorithm.R') # collaborative filtering
 source('functions/similarity_measures.R') # similarity measures
 
+system1 = function (genre, algo,n){
+  
+  candidates = genres[genres$Genre == genre,]  
+  candidates_info = merge(candidates,movies_info)
+  
+  if (algo == 1){
+    
+    candidates_sorted = candidates_info[order(-candidates_info$sum_Rating),]
+    recommendation = candidates_sorted[1:n,]
+  }
+  
+  if (algo == 2){
+    
+    current_year = as.integer(format(Sys.Date(), "%Y"))
+    candidates_info$weight=1/(current_year-candidates_info$year)
+    candidates_sorted = candidates_info[order(-candidates_info$sum_Rating*candidates_info$weight),]
+    recommendation = candidates_sorted[1:n,]
+  }
+  recommendation$reviews=recommendation$sum_Rating/recommendation$avg_Rating
+  recommendation[,c("MovieID","Title","avg_Rating","reviews")]
+}
 
 get_user_ratings = function(value_list) {
   dat = data.table(MovieID = sapply(strsplit(names(value_list), "_"), 
@@ -17,18 +38,42 @@ get_user_ratings = function(value_list) {
 
 # read in data
 myurl = "https://liangfgithub.github.io/MovieData/"
-movies = readLines(paste0(myurl, 'movies.dat?raw=true'))
-movies = strsplit(movies, split = "::", fixed = TRUE, useBytes = TRUE)
-movies = matrix(unlist(movies), ncol = 3, byrow = TRUE)
-movies = data.frame(movies, stringsAsFactors = FALSE)
-colnames(movies) = c('MovieID', 'Title', 'Genres')
-movies$MovieID = as.integer(movies$MovieID)
-movies$Title = iconv(movies$Title, "latin1", "UTF-8")
+movies = fread("data/movies_reshaped.csv")
+# movies = strsplit(movies, split = "::", fixed = TRUE, useBytes = TRUE)
+# movies = matrix(unlist(movies), ncol = 3, byrow = TRUE)
+# movies = data.frame(movies, stringsAsFactors = FALSE)
+# colnames(movies) = c('MovieID', 'Title', 'Genres')
+# movies$MovieID = as.integer(movies$MovieID)
+# movies$Title = iconv(movies$Title, "latin1", "UTF-8")
 
 small_image_url = "https://liangfgithub.github.io/MovieImages/"
 movies$image_url = sapply(movies$MovieID, 
                           function(x) paste0(small_image_url, x, '.jpg?raw=true'))
+movies=movies[order(movies$Genres1),]
+movies$display = paste(movies$Genres1 , ": " , movies$Title)
+#movies_reshaped <- fread("data/movies_reshaped.csv")
 
+Genres = unique(movies$Genres1)
+
+i=1
+
+m=dim(movies[movies$Genres1==Genres[i],])[1]
+
+selection = movies[movies$Genres1==Genres[i],][ceiling(m/2),]
+
+for (i in 2:length(Genres)){
+  
+  m=dim(movies[movies$Genres1==Genres[i],])[1]
+  
+  selection = rbind(selection,movies[movies$Genres1==Genres[i],][ceiling(m/2),])
+}
+
+
+genres=melt(movies[,c("MovieID","Genres1","Genre2","Genre3","Genre4","Genre5","Genre6")], 
+            id.vars = "MovieID" , na.rm = TRUE)
+
+genres=genres[,c(1,3)]
+colnames(genres)=c("MovieID","Genre")
 
 myurl = "https://liangfgithub.github.io/MovieData/"
 
@@ -39,29 +84,36 @@ ratings = read.csv(paste0(myurl, 'ratings.dat?raw=true'),
                    header = FALSE)
 colnames(ratings) = c('UserID', 'MovieID', 'Rating', 'Timestamp')
 
-ratingmat <- sparseMatrix(ratings$MovieID, ratings$UserID, x=ratings$Rating) # movie user matrix
-ratingmat <- ratingmat[, unique(summary(ratingmat)$j)] # remove users with no ratings
-dimnames(ratingmat) <- list(MovieID = as.character(1:max(ratings$MovieID)), UserID = as.character(sort(unique(ratings$UserID))))
+ sum_rating = ratings %>% group_by(MovieID) %>%
+   summarise(sum_Rating = sum(Rating))
+# 
+avg_rating = ratings %>% group_by(MovieID) %>%
+  summarise(avg_Rating = mean(Rating))
+# 
+movies_stats = merge(sum_rating,avg_rating)
+movies_info = merge(movies_stats,movies)
+
 
 shinyServer(function(input, output, session) {
   
   # show the books to be rated
   output$ratings <- renderUI({
-    num_rows <- 20
+    num_rows <- 3
     num_movies <- 6 # movies per row
     
     lapply(1:num_rows, function(i) {
       list(fluidRow(lapply(1:num_movies, function(j) {
         list(box(width = 2,
-                 div(style = "text-align:center", img(src = movies$image_url[(i - 1) * num_movies + j], height = 150)),
+                 div(style = "text-align:center", img(src = selection$image_url[(i - 1) * num_movies + j], height = 150)),
                  #div(style = "text-align:center; color: #999999; font-size: 80%", books$authors[(i - 1) * num_books + j]),
-                 div(style = "text-align:center", strong(movies$Title[(i - 1) * num_movies + j])),
-                 div(style = "text-align:center; font-size: 150%; color: #f0ad4e;", ratingInput(paste0("select_", movies$MovieID[(i - 1) * num_movies + j]), label = "", dataStop = 5)))) #00c0ef
+                 div(style = "text-align:center", strong(selection$display[(i - 1) * num_movies + j])),
+                 div(style = "text-align:center; font-size: 150%; color: #f0ad4e;", ratingInput(paste0("select_", selection$MovieID[(i - 1) * num_movies + j]), label = "", dataStop = 1)))) #00c0ef
       })))
     })
   })
   
   # Calculate recommendations when the sbumbutton is clicked
+  
   df <- eventReactive(input$btn, {
     withBusyIndicatorServer("btn", { # showing the busy indicator
       # hide the rating container
@@ -72,36 +124,24 @@ shinyServer(function(input, output, session) {
       # get the user's rating data
       value_list <- reactiveValuesToList(input)
       user_ratings <- get_user_ratings(value_list)
+
       
-      user_ratings_fmt <- sparseMatrix(i = user_ratings$MovieID, 
-                                   j = rep(1,nrow(user_ratings)), 
-                                   x = user_ratings$Rating, 
-                                   dims = c(nrow(ratingmat), 1))
-      
-      rmat <- cbind(user_ratings_fmt, ratingmat)
-      
-      # get the indices of which cells in the matrix should be predicted
-      # predict all books the current user has not yet rated
-    
-      items_to_predict <- which(rmat[, 1] == 0)
-      prediction_indices <- as.matrix(expand.grid(items_to_predict, 1))
-      
-      # run the ubcf-alogrithm
-      res <- predict_cf(rmat, prediction_indices, "ubcf", TRUE, cal_cos, 1000, FALSE, 2000, 1000)
-      
-      
-      user_results <- sort(res[, 1], decreasing = TRUE)[1:20]
-      user_predicted_ids <- as.numeric(names(user_results))
-  #    user_results = (1:10)/10
-  #    user_predicted_ids = user_ratings$MovieID
-      recom_results <- data.table(Rank = 1:10, 
-                                  MovieID = movies$MovieID[user_predicted_ids], 
-                                  Title = movies$Title[user_predicted_ids], 
-                                  Predicted_rating =  user_results)
-      
+       genre = movies[as.numeric(user_ratings$MovieID[1])==as.numeric(movies$MovieID),]$Genres1[1]
+       res2 = system1(genre,1,10)
+       res = merge(res2,movies,by="MovieID")
+       
+       user_results = (1:10)/10
+       user_predicted_ids = 1:10
+       recom_results <- data.table(Rank = 1:10, 
+                                   MovieID = res$MovieID, 
+                                   Title = res$display, 
+                                   Predicted_rating =  user_results,
+                                   url=res$image_url)
+
     }) # still busy
     
   }) # clicked on button
+  
   
   
   # display the recommendations
@@ -112,13 +152,13 @@ shinyServer(function(input, output, session) {
     
     lapply(1:num_rows, function(i) {
       list(fluidRow(lapply(1:num_movies, function(j) {
-        box(width = 2, status = "success", solidHeader = TRUE,  title = paste0("Rank ", (i - 1) * num_movies + j),
+        box(width = 2, status = "success", solidHeader = TRUE, title = paste0("Rank ", (i - 1) * num_movies + j),
             
             div(style = "text-align:center", 
-                a(img(src = movies$image_url[recom_result$MovieID[(i - 1) * num_movies + j]], height = 150))
+                a(img(src = recom_result$url[(i - 1) * num_movies + j], height = 150))
             ),
             div(style="text-align:center; font-size: 100%", 
-                strong(movies$Title[recom_result$MovieID[(i - 1) * num_movies + j]])
+                strong(recom_result$Title[(i - 1) * num_movies + j])
             )
             
         )        

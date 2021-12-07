@@ -1,0 +1,13 @@
+name: CrudeMovieRecommender
+title: CrudeMovieRecommender
+username:
+account: luma
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 5280183
+bundleId: 5337626
+url: https://luma.shinyapps.io/CrudeMovieRecommender/
+when: 1638850938.47085
+lastSyncTime: 1638850938.47085
+asMultiple: FALSE
+asStatic: FALSE
