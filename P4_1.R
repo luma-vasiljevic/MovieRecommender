@@ -72,62 +72,31 @@ shinyServer(function(input, output, session) {
       
       # get the user's rating data
       value_list <- reactiveValuesToList(input)
-      user_ratings <- get_user_ratings(value_list)
+      user_ratings <- data.frame(MovieID=c("1"),Rating=c(1))
       
-      user_ratings_fmt <- sparseMatrix(i = user_ratings$MovieID, 
-                                   j = rep(1,nrow(user_ratings)), 
-                                   x = user_ratings$Rating, 
-                                   dims = c(nrow(ratingmat), 1))
+      user_ratings_fmt <- sparseMatrix(i = 1, 
+                                       j = rep(1,nrow(user_ratings)), 
+                                       x = 1, 
+                                       dims = c(nrow(ratingmat), 1))
       
       rmat <- cbind(user_ratings_fmt, ratingmat)
       
       # get the indices of which cells in the matrix should be predicted
       # predict all books the current user has not yet rated
-    
+      
       items_to_predict <- which(rmat[, 1] == 0)
       prediction_indices <- as.matrix(expand.grid(items_to_predict, 1))
       
       # run the ubcf-alogrithm
       res <- predict_cf(rmat, prediction_indices, "ubcf", TRUE, cal_cos, 1000, FALSE, 2000, 1000)
       
-      
-      user_results <- sort(res[, 1], decreasing = TRUE)[1:20]
+      user_results <- sort(res[, 1], decreasing = TRUE)
       user_predicted_ids <- as.numeric(names(user_results))
-  #    user_results = (1:10)/10
-  #    user_predicted_ids = user_ratings$MovieID
+      #    user_results = (1:10)/10
+      #    user_predicted_ids = user_ratings$MovieID
       recom_results1 <- data.table(Rank = 1:10, 
-                                   MovieID = movies$MovieID[user_predicted_ids], 
-                                   Title = movies$Title[user_predicted_ids], 
-                                   Predicted_rating =  user_results,
-                                   url=movies$image_url[user_predicted_ids])
+                                  MovieID = movies$MovieID[user_predicted_ids], 
+                                  Title = movies$Title[user_predicted_ids], 
+                                  Predicted_rating =  user_results,
+                                  url=movies$image_url[user_predicted_ids])
       recom_results=recom_results1[!is.na(recom_results1$MovieID),][1:20,]
-      
-    }) # still busy
-    
-  }) # clicked on button
-  
-  
-  # display the recommendations
-  output$results <- renderUI({
-    num_rows <- 2
-    num_movies <- 5
-    recom_result <- df()
-    
-    lapply(1:num_rows, function(i) {
-      list(fluidRow(lapply(1:num_movies, function(j) {
-        box(width = 2, status = "success", solidHeader = TRUE,  title = paste0("Rank ", (i - 1) * num_movies + j),
-            
-            div(style = "text-align:center", 
-                a(img(src = recom_result$url[(i - 1) * num_movies + j], height = 150))
-            ),
-            div(style="text-align:center; font-size: 100%", 
-                strong(recom_result$Title[(i - 1) * num_movies + j])
-            )
-            
-        )        
-      }))) # columns
-    }) # rows
-    
-  }) # renderUI function
-  
-}) # server function

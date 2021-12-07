@@ -51,6 +51,7 @@ movies$image_url = sapply(movies$MovieID,
                           function(x) paste0(small_image_url, x, '.jpg?raw=true'))
 movies=movies[order(movies$Genres1),]
 movies$display = paste(movies$Genres1 , ": " , movies$Title)
+movies$display1 = paste(movies$Title , " - " , movies$Genres)
 #movies_reshaped <- fread("data/movies_reshaped.csv")
 
 Genres = unique(movies$Genres1)
@@ -134,7 +135,8 @@ shinyServer(function(input, output, session) {
        user_predicted_ids = 1:10
        recom_results <- data.table(Rank = 1:10, 
                                    MovieID = res$MovieID, 
-                                   Title = res$display, 
+                                   Title = res$display1, 
+                                   Genres = res$Genres,
                                    Predicted_rating =  user_results,
                                    url=res$image_url)
 
@@ -152,7 +154,7 @@ shinyServer(function(input, output, session) {
     
     lapply(1:num_rows, function(i) {
       list(fluidRow(lapply(1:num_movies, function(j) {
-        box(width = 2, status = "success", solidHeader = TRUE, title = paste0("Rank ", (i - 1) * num_movies + j),
+        box(width = 2, status = "success", solidHeader = TRUE, title = paste0("Recommendation ", (i - 1) * num_movies + j),
             
             div(style = "text-align:center", 
                 a(img(src = recom_result$url[(i - 1) * num_movies + j], height = 150))
@@ -160,7 +162,6 @@ shinyServer(function(input, output, session) {
             div(style="text-align:center; font-size: 100%", 
                 strong(recom_result$Title[(i - 1) * num_movies + j])
             )
-            
         )        
       }))) # columns
     }) # rows

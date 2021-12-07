@@ -5,9 +5,9 @@ account: luma
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 5268634
-bundleId: 5336349
+bundleId: 5337844
 url: https://luma.shinyapps.io/MovieRecommender/
-when: 1638827817.99904
-lastSyncTime: 1638827817.99904
+when: 1638854571.51413
+lastSyncTime: 1638854571.51413
 asMultiple: FALSE
 asStatic: FALSE
