@@ -8,5 +8,5 @@ App2: [MovieRecommender](https://luma.shinyapps.io/MovieRecommender/) recommends
 
 App2 is a copy cat of this [app](https://philippsp.shinyapps.io/BookRecommendation/), See read me in this [repo](https://github.com/pspachtholz/BookRecommender)
 
-Thank you pspachtholz for sharing your code
+Thank you [pspachtholz](https://github.com/pspachtholz) for sharing your code
 
