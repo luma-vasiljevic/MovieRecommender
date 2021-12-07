@@ -1,6 +1,6 @@
 # MovieRecommender
 
-This is code for a shiny apps for movie recommender systems.
+This is code for shiny apps for movie recommender systems.
 
 App1: [CrudeMoveRecommender](https://luma.shinyapps.io/CrudeMovieRecommender/) recommends most popular movies in a selected genre
 
