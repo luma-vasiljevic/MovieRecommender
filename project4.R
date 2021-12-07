@@ -4,12 +4,9 @@ library(recommenderlab)
 library(data.table)
 library(ShinyRatingInput)
 library(shinyjs)
-
 library(dplyr)
 library(ggplot2)
-library(recommenderlab)
 library(DT)
-library(data.table)
 library(reshape2)
         
 library(readr)     
