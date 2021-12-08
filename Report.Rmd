@@ -106,9 +106,9 @@ Genres = unique(genres$Genre)
 for (i in 1:5){
   genre = Genres[i]
   print(paste("Popular ", genre))
-  print(system1(genre,1,n))
+  print(system1(genre,1,n)[,2:4])
   print(paste("Trendy ",genre))
-  print(system1(genre,2,n))
+  print(system1(genre,2,n)[,2:4])
   
 }
 ```
@@ -124,7 +124,29 @@ Collaborative filtering recommenders provide recommendations based on a neighbor
 
 We tested a user based collaborative filtering (UBCF), and an item based collaborative filtering system (IBCF).
  
-The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. FIles are in this [repo](https://github.com/luma-vasiljevic/MovieRecommender). The algorithms were tested on 10 training/testing splits using RMSE as the evaluation metric. Results are below:
+The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. FIles are in this [repo](https://github.com/luma-vasiljevic/MovieRecommender). The algorithms were tested on 10 training/testing splits of the ratings dataset using RMSE as the evaluation metric. Below is percentage overlap of ratings between test splits:
+
+```{r splits}
+test_size=nrow(ratings)-floor(nrow(ratings)*.7)
+ dt=matrix(rep(0,10*test_size), test_size, 10)
+
+ for (k in 1:10){
+ set.seed(1000+81*k)
+ dt[,k] = sort(setdiff(seq(1:nrow(ratings)), sample(nrow(ratings), nrow(ratings)*.7)))}
+
+ 
+ splits_inter=matrix(rep(0,100), 10, 10)
+ colnames(splits_inter)=c("split1","split2","split3","split4","split5","split6","split7","split8","split9","split10")
+ rownames(splits_inter)=c("split1","split2","split3","split4","split5","split6","split7","split8","split9","split10")
+ for (i in 1:10){
+   for(j in 1:10){
+     splits_inter[i,j]=round(length(intersect(dt[,i],dt[,j]))/dim(dt)[1],2)
+   }
+ }
+
+ splits_inter
+```
+Results for runtime, RMSE by split are below:
 
 ```{r system2}
 System210SplitOtput <- read.delim("~/GitHub/MovieRecommender/System210SplitOtput.txt")

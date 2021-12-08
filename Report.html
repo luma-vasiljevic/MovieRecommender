@@ -265,105 +265,81 @@ Genres = unique(genres$Genre)
 for (i in 1:5){
   genre = Genres[i]
   print(paste(&quot;Popular &quot;, genre))
-  print(system1(genre,1,n))
+  print(system1(genre,1,n)[,2:4])
   print(paste(&quot;Trendy &quot;,genre))
-  print(system1(genre,2,n))
+  print(system1(genre,2,n)[,2:4])
   
 }</code></pre>
 <pre><code>## [1] &quot;Popular  Animation&quot;
-##    MovieID                           Title avg_Rating reviews
-## 1        1                Toy Story (1995)   4.146846    2077
-## 87    3114              Toy Story 2 (1999)   4.218927    1585
-## 83    2987 Who Framed Roger Rabbit? (1988)   3.679822    1799
-## 70    2355            Bug&#39;s Life, A (1998)   3.854375    1703
-## 99    3751              Chicken Run (2000)   3.879609    1329
+##                              Title avg_Rating reviews
+## 1                 Toy Story (1995)   4.146846    2077
+## 87              Toy Story 2 (1999)   4.218927    1585
+## 83 Who Framed Roger Rabbit? (1988)   3.679822    1799
+## 70            Bug&#39;s Life, A (1998)   3.854375    1703
+## 99              Chicken Run (2000)   3.879609    1329
 ## [1] &quot;Trendy  Animation&quot;
-##    MovieID                                       Title avg_Rating reviews
-## 1        1                            Toy Story (1995)   4.146846    2077
-## 87    3114                          Toy Story 2 (1999)   4.218927    1585
-## 70    2355                        Bug&#39;s Life, A (1998)   3.854375    1703
-## 99    3751                          Chicken Run (2000)   3.879609    1329
-## 76    2700 South Park: Bigger, Longer and Uncut (1999)   3.760441    1269
+##                                          Title avg_Rating reviews
+## 1                             Toy Story (1995)   4.146846    2077
+## 87                          Toy Story 2 (1999)   4.218927    1585
+## 70                        Bug&#39;s Life, A (1998)   3.854375    1703
+## 99                          Chicken Run (2000)   3.879609    1329
+## 76 South Park: Bigger, Longer and Uncut (1999)   3.760441    1269
 ## [1] &quot;Popular  Adventure&quot;
-##    MovieID                                                 Title avg_Rating
-## 24     260             Star Wars: Episode IV - A New Hope (1977)   4.453694
-## 89    1196 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977
-## 93    1210     Star Wars: Episode VI - Return of the Jedi (1983)   4.022893
-## 91    1198                        Raiders of the Lost Ark (1981)   4.477725
-## 38     480                                  Jurassic Park (1993)   3.763847
-##    reviews
-## 24    2991
-## 89    2990
-## 93    2883
-## 91    2514
-## 38    2672
+##                                                    Title avg_Rating reviews
+## 24             Star Wars: Episode IV - A New Hope (1977)   4.453694    2991
+## 89 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977    2990
+## 93     Star Wars: Episode VI - Return of the Jedi (1983)   4.022893    2883
+## 91                        Raiders of the Lost Ark (1981)   4.477725    2514
+## 38                                  Jurassic Park (1993)   3.763847    2672
 ## [1] &quot;Trendy  Adventure&quot;
-##     MovieID                                                 Title avg_Rating
-## 123    1580                                   Men in Black (1997)   3.739953
-## 38      480                                  Jurassic Park (1993)   3.763847
-## 209    2628      Star Wars: Episode I - The Phantom Menace (1999)   3.409778
-## 89     1196 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977
-## 93     1210     Star Wars: Episode VI - Return of the Jedi (1983)   4.022893
-##     reviews
-## 123    2538
-## 38     2672
-## 209    2250
-## 89     2990
-## 93     2883
+##                                                     Title avg_Rating reviews
+## 123                                   Men in Black (1997)   3.739953    2538
+## 38                                   Jurassic Park (1993)   3.763847    2672
+## 209      Star Wars: Episode I - The Phantom Menace (1999)   3.409778    2250
+## 89  Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977    2990
+## 93      Star Wars: Episode VI - Return of the Jedi (1983)   4.022893    2883
 ## [1] &quot;Popular  Comedy&quot;
-##     MovieID                      Title avg_Rating reviews
-## 831    2858     American Beauty (1999)   4.317386    3428
-## 364    1270  Back to the Future (1985)   3.990321    2583
-## 342    1197 Princess Bride, The (1987)   4.303710    2318
-## 691    2396 Shakespeare in Love (1998)   4.127480    2369
-## 447    1580        Men in Black (1997)   3.739953    2538
+##                          Title avg_Rating reviews
+## 831     American Beauty (1999)   4.317386    3428
+## 364  Back to the Future (1985)   3.990321    2583
+## 342 Princess Bride, The (1987)   4.303710    2318
+## 691 Shakespeare in Love (1998)   4.127480    2369
+## 447        Men in Black (1997)   3.739953    2538
 ## [1] &quot;Trendy  Comedy&quot;
-##     MovieID                       Title avg_Rating reviews
-## 831    2858      American Beauty (1999)   4.317386    3428
-## 691    2396  Shakespeare in Love (1998)   4.127480    2369
-## 867    2997 Being John Malkovich (1999)   4.125390    2241
-## 447    1580         Men in Black (1997)   3.739953    2538
-## 107     356         Forrest Gump (1994)   4.087967    2194
+##                           Title avg_Rating reviews
+## 831      American Beauty (1999)   4.317386    3428
+## 691  Shakespeare in Love (1998)   4.127480    2369
+## 867 Being John Malkovich (1999)   4.125390    2241
+## 447         Men in Black (1997)   3.739953    2538
+## 107         Forrest Gump (1994)   4.087967    2194
 ## [1] &quot;Popular  Action&quot;
-##     MovieID                                                 Title avg_Rating
-## 32      260             Star Wars: Episode IV - A New Hope (1977)   4.453694
-## 136    1196 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977
-## 142    1210     Star Wars: Episode VI - Return of the Jedi (1983)   4.022893
-## 261    2028                            Saving Private Ryan (1998)   4.337354
-## 138    1198                        Raiders of the Lost Ark (1981)   4.477725
-##     reviews
-## 32     2991
-## 136    2990
-## 142    2883
-## 261    2653
-## 138    2514
+##                                                     Title avg_Rating reviews
+## 32              Star Wars: Episode IV - A New Hope (1977)   4.453694    2991
+## 136 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977    2990
+## 142     Star Wars: Episode VI - Return of the Jedi (1983)   4.022893    2883
+## 261                            Saving Private Ryan (1998)   4.337354    2653
+## 138                        Raiders of the Lost Ark (1981)   4.477725    2514
 ## [1] &quot;Trendy  Action&quot;
-##     MovieID                      Title avg_Rating reviews
-## 331    2571         Matrix, The (1999)   4.315830    2590
-## 261    2028 Saving Private Ryan (1998)   4.337354    2653
-## 14      110          Braveheart (1995)   4.234957    2443
-## 202    1580        Men in Black (1997)   3.739953    2538
-## 446    3578           Gladiator (2000)   4.106029    1924
+##                          Title avg_Rating reviews
+## 331         Matrix, The (1999)   4.315830    2590
+## 261 Saving Private Ryan (1998)   4.337354    2653
+## 14           Braveheart (1995)   4.234957    2443
+## 202        Men in Black (1997)   3.739953    2538
+## 446           Gladiator (2000)   4.106029    1924
 ## [1] &quot;Popular  Drama&quot;
-##      MovieID                                                 Title avg_Rating
-## 1059    2858                                American Beauty (1999)   4.317386
-## 488     1196 Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977
-## 786     2028                            Saving Private Ryan (1998)   4.337354
-## 268      593                      Silence of the Lambs, The (1991)   4.351823
-## 272      608                                          Fargo (1996)   4.254676
-##      reviews
-## 1059    3428
-## 488     2990
-## 786     2653
-## 268     2578
-## 272     2513
+##                                                      Title avg_Rating reviews
+## 1059                                American Beauty (1999)   4.317386    3428
+## 488  Star Wars: Episode V - The Empire Strikes Back (1980)   4.292977    2990
+## 786                             Saving Private Ryan (1998)   4.337354    2653
+## 268                       Silence of the Lambs, The (1991)   4.351823    2578
+## 272                                           Fargo (1996)   4.254676    2513
 ## [1] &quot;Trendy  Drama&quot;
-##      MovieID                      Title avg_Rating reviews
-## 1059    2858     American Beauty (1999)   4.317386    3428
-## 786     2028 Saving Private Ryan (1998)   4.337354    2653
-## 272      608               Fargo (1996)   4.254676    2513
-## 53       110          Braveheart (1995)   4.234957    2443
-## 1375    3578           Gladiator (2000)   4.106029    1924</code></pre>
+##                           Title avg_Rating reviews
+## 1059     American Beauty (1999)   4.317386    3428
+## 786  Saving Private Ryan (1998)   4.337354    2653
+## 272                Fargo (1996)   4.254676    2513
+## 53            Braveheart (1995)   4.234957    2443
+## 1375           Gladiator (2000)   4.106029    1924</code></pre>
 </div>
 </div>
 <div id="system-ii" class="section level2">
@@ -372,7 +348,37 @@ for (i in 1:5){
 <p><a href="https://luma.shinyapps.io/MovieRecommender/">MovieRecommender</a> is a copy cat of this <a href="https://philippsp.shinyapps.io/BookRecommendation/">app</a>, See read me in this <a href="https://github.com/pspachtholz/BookRecommender">repo</a>.</p>
 <p>Collaborative filtering recommenders provide recommendations based on a neighborhood of similar users (user based collaborative filtering) or items (item based collaborative filtering). Parameters are similarity measure and neighborhood size. For this assignment, we used the implementation by Stefan Nicklic in this <a href="https://github.com/pspachtholz/BookRecommender">repo</a>.</p>
 <p>We tested a user based collaborative filtering (UBCF), and an item based collaborative filtering system (IBCF).</p>
-<p>The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. FIles are in this <a href="https://github.com/luma-vasiljevic/MovieRecommender">repo</a>. The algorithms were tested on 10 training/testing splits using RMSE as the evaluation metric. Results are below:</p>
+<p>The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. FIles are in this <a href="https://github.com/luma-vasiljevic/MovieRecommender">repo</a>. The algorithms were tested on 10 training/testing splits of the ratings dataset using RMSE as the evaluation metric. Below is percentage overlap of ratings between test splits:</p>
+<pre class="r"><code>test_size=nrow(ratings)-floor(nrow(ratings)*.7)
+ dt=matrix(rep(0,10*test_size), test_size, 10)
+
+ for (k in 1:10){
+ set.seed(1000+81*k)
+ dt[,k] = sort(setdiff(seq(1:nrow(ratings)), sample(nrow(ratings), nrow(ratings)*.7)))}
+
+ 
+ splits_inter=matrix(rep(0,100), 10, 10)
+ colnames(splits_inter)=c(&quot;split1&quot;,&quot;split2&quot;,&quot;split3&quot;,&quot;split4&quot;,&quot;split5&quot;,&quot;split6&quot;,&quot;split7&quot;,&quot;split8&quot;,&quot;split9&quot;,&quot;split10&quot;)
+ rownames(splits_inter)=c(&quot;split1&quot;,&quot;split2&quot;,&quot;split3&quot;,&quot;split4&quot;,&quot;split5&quot;,&quot;split6&quot;,&quot;split7&quot;,&quot;split8&quot;,&quot;split9&quot;,&quot;split10&quot;)
+ for (i in 1:10){
+   for(j in 1:10){
+     splits_inter[i,j]=round(length(intersect(dt[,i],dt[,j]))/dim(dt)[1],2)
+   }
+ }
+
+ splits_inter</code></pre>
+<pre><code>##         split1 split2 split3 split4 split5 split6 split7 split8 split9 split10
+## split1     1.0    0.3    0.3    0.3    0.3    0.3    0.3    0.3    0.3     0.3
+## split2     0.3    1.0    0.3    0.3    0.3    0.3    0.3    0.3    0.3     0.3
+## split3     0.3    0.3    1.0    0.3    0.3    0.3    0.3    0.3    0.3     0.3
+## split4     0.3    0.3    0.3    1.0    0.3    0.3    0.3    0.3    0.3     0.3
+## split5     0.3    0.3    0.3    0.3    1.0    0.3    0.3    0.3    0.3     0.3
+## split6     0.3    0.3    0.3    0.3    0.3    1.0    0.3    0.3    0.3     0.3
+## split7     0.3    0.3    0.3    0.3    0.3    0.3    1.0    0.3    0.3     0.3
+## split8     0.3    0.3    0.3    0.3    0.3    0.3    0.3    1.0    0.3     0.3
+## split9     0.3    0.3    0.3    0.3    0.3    0.3    0.3    0.3    1.0     0.3
+## split10    0.3    0.3    0.3    0.3    0.3    0.3    0.3    0.3    0.3     1.0</code></pre>
+<p>Results for runtime, RMSE by split are below:</p>
 <pre class="r"><code>System210SplitOtput &lt;- read.delim(&quot;~/GitHub/MovieRecommender/System210SplitOtput.txt&quot;)
 
 System210SplitOtput</code></pre>
