@@ -54,7 +54,7 @@ RMSE2 = rep(0,10)
 #
 elapsed=rep(0,10)
 
- for (k in 1:2){
+ for (k in 1:10){
 #
 # #splits
 set.seed(1000+81*k)
