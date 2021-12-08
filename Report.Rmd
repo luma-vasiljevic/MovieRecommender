@@ -1,0 +1,133 @@
+---
+title: "STT 542 Project 4"
+author: "Luma Vasiljevic"
+date: "12/7/2021"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## System I
+
+This reccommender system recommends top 10 most popular movies in a genre. The app can be found at this address: https://luma.shinyapps.io/CrudeMovieRecommender/
+
+### Scheme 1
+
+Scheme 1 is used in the [CrudeMovieRecommender](https://luma.shinyapps.io/CrudeMovieRecommender/) app. It returns top n movies in a selected genre sorted in descending order by the sum of ratings, which is intended to reflect popularity.Popular movies are rated highly and rated often. The multiple genres per movie are parsed and reshaped. A movie can belong to multiple genres but it has one average rating which is why genres other than the one selected are returned in the recommendation. The browser needs to be refreshed for the app to take new selection.
+ 
+### Sheme 2
+
+Scheme 2 returns top n movies in a genre sorted by sum of weighted ratings, where the weights are inverse of the movie age. This is intended to favor newer movies and reflect trendiness. Trendy is newer, highly rated, and rated often.
+
+```{r system1, warning = FALSE, message = FALSE}
+library(recommenderlab)
+library(data.table)
+library(dplyr)
+library(ggplot2)
+library(DT)
+library(reshape2)
+library(readr)     
+
+# Get movie data
+myurl = "https://liangfgithub.github.io/MovieData/"
+movies = readLines(paste0(myurl, 'movies.dat?raw=true'))
+movies = strsplit(movies, split = "::", fixed = TRUE, useBytes = TRUE)
+movies = matrix(unlist(movies), ncol = 3, byrow = TRUE)
+movies = data.frame(movies, stringsAsFactors = FALSE)
+colnames(movies) = c('MovieID', 'Title', 'Genres')
+movies$MovieID = as.integer(movies$MovieID)
+movies$Title = iconv(movies$Title, "latin1", "UTF-8")
+
+
+movies_reshaped <- read_csv("data/movies_reshaped.csv")
+
+# reshape movies further
+genres=melt(movies_reshaped[,c("MovieID","Genres1","Genre2","Genre3","Genre4","Genre5","Genre6")], 
+            id.vars = "MovieID" , na.rm = TRUE)
+
+genres=genres[,c(1,3)]
+colnames(genres)=c("MovieID","Genre")
+
+
+movies_reshaped2=movies_reshaped[,1:3]
+
+
+myurl = "https://liangfgithub.github.io/MovieData/"
+
+
+ratings = read.csv(paste0(myurl, 'ratings.dat?raw=true'), 
+                   sep = ':',
+                   colClasses = c('integer', 'NULL'), 
+                   header = FALSE)
+colnames(ratings) = c('UserID', 'MovieID', 'Rating', 'Timestamp')
+
+sum_rating = ratings %>% group_by(MovieID) %>% 
+  summarise(sum_Rating = sum(Rating))
+
+avg_rating = ratings %>% group_by(MovieID) %>% 
+  summarise(avg_Rating = mean(Rating))
+
+movies_stats = merge(sum_rating,avg_rating)
+movies_info = merge(movies_stats,movies_reshaped2)
+  
+  
+n=5
+
+system1 = function (genre, algo,n){
+
+  candidates = genres[genres$Genre == genre,]  
+  candidates_info = merge(candidates,movies_info)
+  
+  if (algo == 1){
+    
+    candidates_sorted = candidates_info[order(-candidates_info$sum_Rating),]
+    recommendation = candidates_sorted[1:n,]
+  }
+  
+  if (algo == 2){
+    
+    current_year = as.integer(format(Sys.Date(), "%Y"))
+    candidates_info$weight=1/(current_year-candidates_info$year)
+    candidates_sorted = candidates_info[order(-candidates_info$sum_Rating*candidates_info$weight),]
+    recommendation = candidates_sorted[1:n,]
+  }
+  recommendation$reviews=recommendation$sum_Rating/recommendation$avg_Rating
+  recommendation[,c("MovieID","Title","avg_Rating","reviews")]
+}
+
+genres1=merge(genres,movies)
+genres1=genres1[order(genres1$Genre),]
+genres1$display = paste(genres1$Genre , ": " , genres1$Title)
+
+Genres = unique(genres$Genre)
+
+for (i in 1:5){
+  genre = Genres[i]
+  print(paste("Popular ", genre))
+  print(system1(genre,1,n))
+  print(paste("Trendy ",genre))
+  print(system1(genre,2,n))
+  
+}
+```
+
+
+## System II
+
+This reccommender system recommends 10 movies based on a user absed collaborative filtering algorithm. The app can be found at this address: https://luma.shinyapps.io/MovieRecommender/
+
+[MovieRecommender](https://luma.shinyapps.io/MovieRecommender/) is a copy cat of this [app](https://philippsp.shinyapps.io/BookRecommendation/), See read me in this [repo](https://github.com/pspachtholz/BookRecommender).
+
+Collaborative filtering recommenders provide recommendations based on a neighborhood of similar users (user based collaborative filtering) or items (item based collaborative filtering). Parameters are similarity measure and neighborhood size. For this assignment, we used the implementation by Stefan Nicklic in this [repo](https://github.com/pspachtholz/BookRecommender). 
+
+We tested a user based collaborative filtering (UBCF), and an item based collaborative filtering system (IBCF).
+ 
+The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. The algorithms were tested on 10 training/testing splits using RMSE as the evaluation metric. Results are below:
+
+```{r system2}
+System210SplitOtput <- read.delim("~/GitHub/MovieRecommender/System210SplitOtput.txt")
+
+System210SplitOtput
+```
