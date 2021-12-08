@@ -37,14 +37,6 @@ colnames(genres)=c("MovieID","Genre")
 
 movies_reshaped2=movies_reshaped[,1:3]
 
-user_results = (1:10)/10
-user_predicted_ids = 1:10
-recom_results <- data.table(Rank = 1:10, 
-                            MovieID = movies$MovieID[user_predicted_ids], 
-                            Title = movies$Title[user_predicted_ids], 
-                            Predicted_rating =  user_results)
-
-
 myurl = "https://liangfgithub.github.io/MovieData/"
 
 
@@ -62,7 +54,7 @@ RMSE2 = rep(0,10)
 #
 elapsed=rep(0,10)
 
- for (k in 1:10){
+ for (k in 1:2){
 #
 # #splits
 set.seed(1000+81*k)
