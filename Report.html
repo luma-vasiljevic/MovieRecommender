@@ -372,7 +372,7 @@ for (i in 1:5){
 <p><a href="https://luma.shinyapps.io/MovieRecommender/">MovieRecommender</a> is a copy cat of this <a href="https://philippsp.shinyapps.io/BookRecommendation/">app</a>, See read me in this <a href="https://github.com/pspachtholz/BookRecommender">repo</a>.</p>
 <p>Collaborative filtering recommenders provide recommendations based on a neighborhood of similar users (user based collaborative filtering) or items (item based collaborative filtering). Parameters are similarity measure and neighborhood size. For this assignment, we used the implementation by Stefan Nicklic in this <a href="https://github.com/pspachtholz/BookRecommender">repo</a>.</p>
 <p>We tested a user based collaborative filtering (UBCF), and an item based collaborative filtering system (IBCF).</p>
-<p>The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. The algorithms were tested on 10 training/testing splits using RMSE as the evaluation metric. Results are below:</p>
+<p>The rating matrix was normalized by subtracting column mean for UBCF, and subtracting row mean for IBCF. We used a neighborhood size of 1000. Cosine was used as similarity measure. File System2.R has the code that produced the results. FIles are in this <a href="https://github.com/luma-vasiljevic/MovieRecommender">repo</a>. The algorithms were tested on 10 training/testing splits using RMSE as the evaluation metric. Results are below:</p>
 <pre class="r"><code>System210SplitOtput &lt;- read.delim(&quot;~/GitHub/MovieRecommender/System210SplitOtput.txt&quot;)
 
 System210SplitOtput</code></pre>
