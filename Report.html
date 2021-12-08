@@ -178,8 +178,8 @@ pre code {
 <h3>Scheme 1</h3>
 <p>Scheme 1 is used in the <a href="https://luma.shinyapps.io/CrudeMovieRecommender/">CrudeMovieRecommender</a> app. It returns top n movies in a selected genre sorted in descending order by the sum of ratings, which is intended to reflect popularity.Popular movies are rated highly and rated often. The multiple genres per movie are parsed and reshaped. A movie can belong to multiple genres but it has one average rating which is why genres other than the one selected are returned in the recommendation. The browser needs to be refreshed for the app to take new selection.</p>
 </div>
-<div id="sheme-2" class="section level3">
-<h3>Sheme 2</h3>
+<div id="scheme-2" class="section level3">
+<h3>Scheme 2</h3>
 <p>Scheme 2 returns top n movies in a genre sorted by sum of weighted ratings, where the weights are inverse of the movie age. This is intended to favor newer movies and reflect trendiness. Trendy is newer, highly rated, and rated often.</p>
 <pre class="r"><code>library(recommenderlab)
 library(data.table)
